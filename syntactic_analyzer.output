@@ -1,0 +1,142 @@
+Terminals unused in grammar
+
+   _UNKNOWN
+
+
+Grammar
+
+    0 $accept: PROGRAM $end
+
+    1 PROGRAM: _BEGIN PRIKAZY _END
+
+    2 PRIKAZY: PRIKAZ _SEMICOLON PRIKAZY
+    3        | /* empty */
+
+    4 PRIKAZ: _P
+    5       | _NUM
+    6       | _LOAD
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+_BEGIN (258) 1
+_END (259) 1
+_SEMICOLON (260) 2
+_P (261) 4
+_NUM (262) 5
+_LOAD (263) 6
+_UNKNOWN (264)
+
+
+Nonterminals, with rules where they appear
+
+$accept (10)
+    on left: 0
+PROGRAM (11)
+    on left: 1, on right: 0
+PRIKAZY (12)
+    on left: 2 3, on right: 1 2
+PRIKAZ (13)
+    on left: 4 5 6, on right: 2
+
+
+state 0
+
+    0 $accept: . PROGRAM $end
+
+    _BEGIN  shift, and go to state 1
+
+    PROGRAM  go to state 2
+
+
+state 1
+
+    1 PROGRAM: _BEGIN . PRIKAZY _END
+
+    _P     shift, and go to state 3
+    _NUM   shift, and go to state 4
+    _LOAD  shift, and go to state 5
+
+    $default  reduce using rule 3 (PRIKAZY)
+
+    PRIKAZY  go to state 6
+    PRIKAZ   go to state 7
+
+
+state 2
+
+    0 $accept: PROGRAM . $end
+
+    $end  shift, and go to state 8
+
+
+state 3
+
+    4 PRIKAZ: _P .
+
+    $default  reduce using rule 4 (PRIKAZ)
+
+
+state 4
+
+    5 PRIKAZ: _NUM .
+
+    $default  reduce using rule 5 (PRIKAZ)
+
+
+state 5
+
+    6 PRIKAZ: _LOAD .
+
+    $default  reduce using rule 6 (PRIKAZ)
+
+
+state 6
+
+    1 PROGRAM: _BEGIN PRIKAZY . _END
+
+    _END  shift, and go to state 9
+
+
+state 7
+
+    2 PRIKAZY: PRIKAZ . _SEMICOLON PRIKAZY
+
+    _SEMICOLON  shift, and go to state 10
+
+
+state 8
+
+    0 $accept: PROGRAM $end .
+
+    $default  accept
+
+
+state 9
+
+    1 PROGRAM: _BEGIN PRIKAZY _END .
+
+    $default  reduce using rule 1 (PROGRAM)
+
+
+state 10
+
+    2 PRIKAZY: PRIKAZ _SEMICOLON . PRIKAZY
+
+    _P     shift, and go to state 3
+    _NUM   shift, and go to state 4
+    _LOAD  shift, and go to state 5
+
+    $default  reduce using rule 3 (PRIKAZY)
+
+    PRIKAZY  go to state 11
+    PRIKAZ   go to state 7
+
+
+state 11
+
+    2 PRIKAZY: PRIKAZ _SEMICOLON PRIKAZY .
+
+    $default  reduce using rule 2 (PRIKAZY)

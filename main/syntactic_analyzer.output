@@ -1,0 +1,442 @@
+Terminals unused in grammar
+
+   _UNKNOWN
+
+
+Grammar
+
+    0 $accept: PROGRAM $end
+
+    1 PROGRAM: DEKLARACIE PRIKAZY
+
+    2 DEKLARACIE: DEKLARACIA DEKLARACIE
+    3           | /* empty */
+
+    4 DEKLARACIA: _PREMENNA _ID
+
+    5 PRIKAZY: PRIKAZ PRIKAZY
+    6        | /* empty */
+
+    7 PRIKAZ: _NACITAJ _ID
+    8       | _VYPIS _ID
+    9       | PRIRADENIE
+   10       | _OPAKUJ PODMIENKA PRIKAZY _JUKAPO
+
+   11 PRIRADENIE: _ID _ASSIGN VYRAZ
+
+   12 VYRAZ: HODNOTA OPERATOR HODNOTA
+   13      | HODNOTA
+
+   14 OPERATOR: _PLUS
+   15         | _MINUS
+   16         | _MULTIPLY
+
+   17 PODMIENKA: HODNOTA KOMPARATOR HODNOTA
+
+   18 HODNOTA: _ID
+   19        | _KONST
+
+   20 KOMPARATOR: _LESSER_THAN
+   21           | _BIGGER_THAN
+   22           | _LESSER_EQUAL_THAN
+   23           | _BIGGER_EQUAL_THAN
+   24           | _EQUAL
+   25           | _NOT_EQUAL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+_PREMENNA (258) 4
+_ID (259) 4 7 8 11 18
+_NACITAJ (260) 7
+_VYPIS (261) 8
+_OPAKUJ (262) 10
+_JUKAPO (263) 10
+_KONST (264) 19
+_PLUS (265) 14
+_MINUS (266) 15
+_MULTIPLY (267) 16
+_ASSIGN (268) 11
+_EQUAL (269) 24
+_NOT_EQUAL (270) 25
+_BIGGER_THAN (271) 21
+_LESSER_THAN (272) 20
+_BIGGER_EQUAL_THAN (273) 23
+_LESSER_EQUAL_THAN (274) 22
+_UNKNOWN (275)
+
+
+Nonterminals, with rules where they appear
+
+$accept (21)
+    on left: 0
+PROGRAM (22)
+    on left: 1, on right: 0
+DEKLARACIE (23)
+    on left: 2 3, on right: 1 2
+DEKLARACIA (24)
+    on left: 4, on right: 2
+PRIKAZY (25)
+    on left: 5 6, on right: 1 5 10
+PRIKAZ (26)
+    on left: 7 8 9 10, on right: 5
+PRIRADENIE (27)
+    on left: 11, on right: 9
+VYRAZ (28)
+    on left: 12 13, on right: 11
+OPERATOR (29)
+    on left: 14 15 16, on right: 12
+PODMIENKA (30)
+    on left: 17, on right: 10
+HODNOTA (31)
+    on left: 18 19, on right: 12 13 17
+KOMPARATOR (32)
+    on left: 20 21 22 23 24 25, on right: 17
+
+
+state 0
+
+    0 $accept: . PROGRAM $end
+
+    _PREMENNA  shift, and go to state 1
+
+    $default  reduce using rule 3 (DEKLARACIE)
+
+    PROGRAM     go to state 2
+    DEKLARACIE  go to state 3
+    DEKLARACIA  go to state 4
+
+
+state 1
+
+    4 DEKLARACIA: _PREMENNA . _ID
+
+    _ID  shift, and go to state 5
+
+
+state 2
+
+    0 $accept: PROGRAM . $end
+
+    $end  shift, and go to state 6
+
+
+state 3
+
+    1 PROGRAM: DEKLARACIE . PRIKAZY
+
+    _ID       shift, and go to state 7
+    _NACITAJ  shift, and go to state 8
+    _VYPIS    shift, and go to state 9
+    _OPAKUJ   shift, and go to state 10
+
+    $default  reduce using rule 6 (PRIKAZY)
+
+    PRIKAZY     go to state 11
+    PRIKAZ      go to state 12
+    PRIRADENIE  go to state 13
+
+
+state 4
+
+    2 DEKLARACIE: DEKLARACIA . DEKLARACIE
+
+    _PREMENNA  shift, and go to state 1
+
+    $default  reduce using rule 3 (DEKLARACIE)
+
+    DEKLARACIE  go to state 14
+    DEKLARACIA  go to state 4
+
+
+state 5
+
+    4 DEKLARACIA: _PREMENNA _ID .
+
+    $default  reduce using rule 4 (DEKLARACIA)
+
+
+state 6
+
+    0 $accept: PROGRAM $end .
+
+    $default  accept
+
+
+state 7
+
+   11 PRIRADENIE: _ID . _ASSIGN VYRAZ
+
+    _ASSIGN  shift, and go to state 15
+
+
+state 8
+
+    7 PRIKAZ: _NACITAJ . _ID
+
+    _ID  shift, and go to state 16
+
+
+state 9
+
+    8 PRIKAZ: _VYPIS . _ID
+
+    _ID  shift, and go to state 17
+
+
+state 10
+
+   10 PRIKAZ: _OPAKUJ . PODMIENKA PRIKAZY _JUKAPO
+
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    PODMIENKA  go to state 20
+    HODNOTA    go to state 21
+
+
+state 11
+
+    1 PROGRAM: DEKLARACIE PRIKAZY .
+
+    $default  reduce using rule 1 (PROGRAM)
+
+
+state 12
+
+    5 PRIKAZY: PRIKAZ . PRIKAZY
+
+    _ID       shift, and go to state 7
+    _NACITAJ  shift, and go to state 8
+    _VYPIS    shift, and go to state 9
+    _OPAKUJ   shift, and go to state 10
+
+    $default  reduce using rule 6 (PRIKAZY)
+
+    PRIKAZY     go to state 22
+    PRIKAZ      go to state 12
+    PRIRADENIE  go to state 13
+
+
+state 13
+
+    9 PRIKAZ: PRIRADENIE .
+
+    $default  reduce using rule 9 (PRIKAZ)
+
+
+state 14
+
+    2 DEKLARACIE: DEKLARACIA DEKLARACIE .
+
+    $default  reduce using rule 2 (DEKLARACIE)
+
+
+state 15
+
+   11 PRIRADENIE: _ID _ASSIGN . VYRAZ
+
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    VYRAZ    go to state 23
+    HODNOTA  go to state 24
+
+
+state 16
+
+    7 PRIKAZ: _NACITAJ _ID .
+
+    $default  reduce using rule 7 (PRIKAZ)
+
+
+state 17
+
+    8 PRIKAZ: _VYPIS _ID .
+
+    $default  reduce using rule 8 (PRIKAZ)
+
+
+state 18
+
+   18 HODNOTA: _ID .
+
+    $default  reduce using rule 18 (HODNOTA)
+
+
+state 19
+
+   19 HODNOTA: _KONST .
+
+    $default  reduce using rule 19 (HODNOTA)
+
+
+state 20
+
+   10 PRIKAZ: _OPAKUJ PODMIENKA . PRIKAZY _JUKAPO
+
+    _ID       shift, and go to state 7
+    _NACITAJ  shift, and go to state 8
+    _VYPIS    shift, and go to state 9
+    _OPAKUJ   shift, and go to state 10
+
+    $default  reduce using rule 6 (PRIKAZY)
+
+    PRIKAZY     go to state 25
+    PRIKAZ      go to state 12
+    PRIRADENIE  go to state 13
+
+
+state 21
+
+   17 PODMIENKA: HODNOTA . KOMPARATOR HODNOTA
+
+    _EQUAL              shift, and go to state 26
+    _NOT_EQUAL          shift, and go to state 27
+    _BIGGER_THAN        shift, and go to state 28
+    _LESSER_THAN        shift, and go to state 29
+    _BIGGER_EQUAL_THAN  shift, and go to state 30
+    _LESSER_EQUAL_THAN  shift, and go to state 31
+
+    KOMPARATOR  go to state 32
+
+
+state 22
+
+    5 PRIKAZY: PRIKAZ PRIKAZY .
+
+    $default  reduce using rule 5 (PRIKAZY)
+
+
+state 23
+
+   11 PRIRADENIE: _ID _ASSIGN VYRAZ .
+
+    $default  reduce using rule 11 (PRIRADENIE)
+
+
+state 24
+
+   12 VYRAZ: HODNOTA . OPERATOR HODNOTA
+   13      | HODNOTA .
+
+    _PLUS      shift, and go to state 33
+    _MINUS     shift, and go to state 34
+    _MULTIPLY  shift, and go to state 35
+
+    $default  reduce using rule 13 (VYRAZ)
+
+    OPERATOR  go to state 36
+
+
+state 25
+
+   10 PRIKAZ: _OPAKUJ PODMIENKA PRIKAZY . _JUKAPO
+
+    _JUKAPO  shift, and go to state 37
+
+
+state 26
+
+   24 KOMPARATOR: _EQUAL .
+
+    $default  reduce using rule 24 (KOMPARATOR)
+
+
+state 27
+
+   25 KOMPARATOR: _NOT_EQUAL .
+
+    $default  reduce using rule 25 (KOMPARATOR)
+
+
+state 28
+
+   21 KOMPARATOR: _BIGGER_THAN .
+
+    $default  reduce using rule 21 (KOMPARATOR)
+
+
+state 29
+
+   20 KOMPARATOR: _LESSER_THAN .
+
+    $default  reduce using rule 20 (KOMPARATOR)
+
+
+state 30
+
+   23 KOMPARATOR: _BIGGER_EQUAL_THAN .
+
+    $default  reduce using rule 23 (KOMPARATOR)
+
+
+state 31
+
+   22 KOMPARATOR: _LESSER_EQUAL_THAN .
+
+    $default  reduce using rule 22 (KOMPARATOR)
+
+
+state 32
+
+   17 PODMIENKA: HODNOTA KOMPARATOR . HODNOTA
+
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    HODNOTA  go to state 38
+
+
+state 33
+
+   14 OPERATOR: _PLUS .
+
+    $default  reduce using rule 14 (OPERATOR)
+
+
+state 34
+
+   15 OPERATOR: _MINUS .
+
+    $default  reduce using rule 15 (OPERATOR)
+
+
+state 35
+
+   16 OPERATOR: _MULTIPLY .
+
+    $default  reduce using rule 16 (OPERATOR)
+
+
+state 36
+
+   12 VYRAZ: HODNOTA OPERATOR . HODNOTA
+
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    HODNOTA  go to state 39
+
+
+state 37
+
+   10 PRIKAZ: _OPAKUJ PODMIENKA PRIKAZY _JUKAPO .
+
+    $default  reduce using rule 10 (PRIKAZ)
+
+
+state 38
+
+   17 PODMIENKA: HODNOTA KOMPARATOR HODNOTA .
+
+    $default  reduce using rule 17 (PODMIENKA)
+
+
+state 39
+
+   12 VYRAZ: HODNOTA OPERATOR HODNOTA .
+
+    $default  reduce using rule 12 (VYRAZ)
