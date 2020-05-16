@@ -76,22 +76,10 @@
 #include <string.h>
 
 extern int line_count;
-extern int token_id;
 extern char *yytext;
-extern int *count;
-
-extern struct Program program;
-extern struct Shared shared;
-extern int variable_count;
 
 void yyerror (const char *s);
 int yylex();
-
-//typedef struct {
-//	char *var;
-//        char *name;
-//        char *name2;
-//} semantic_entry;
 
 char *tmp;
 char *operator;
@@ -100,7 +88,7 @@ char *right_v;
 
 
 /* Line 189 of yacc.c  */
-#line 104 "syntactic_analyzer.tab.c"
+#line 92 "syntactic_analyzer.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -155,26 +143,20 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 53 "syntactic_analyzer.y"
+#line 41 "syntactic_analyzer.y"
 
 	struct {
 		int t_count;
-		int assign;
 
 		char *name;
-		char *var;
-		 char *id;
-		char *hodnota;
-		char *vyraz;
+		char *id;
 		char konst[100];
-
-		struct Shared* shared;
         } u;
 
 
 
 /* Line 214 of yacc.c  */
-#line 178 "syntactic_analyzer.tab.c"
+#line 160 "syntactic_analyzer.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -186,7 +168,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 190 "syntactic_analyzer.tab.c"
+#line 172 "syntactic_analyzer.tab.c"
 
 #ifdef short
 # undef short
@@ -477,9 +459,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    79,    79,    81,    82,    84,    86,    87,    89,    92,
-      95,    98,   100,   100,   104,   105,   107,   110,   111,   113,
-     115,   118,   146,   147,   148,   149,   150,   151
+       0,    61,    61,    63,    64,    66,    68,    69,    71,    74,
+      77,    78,    80,    80,    84,    85,    87,    90,    91,    93,
+      95,    98,   126,   127,   128,   129,   130,   131
 };
 #endif
 
@@ -1403,7 +1385,7 @@ yyreduce:
         case 8:
 
 /* Line 1455 of yacc.c  */
-#line 89 "syntactic_analyzer.y"
+#line 71 "syntactic_analyzer.y"
     {
 	 printf("(WRITE, %s) \n", yytext);
  ;}
@@ -1412,25 +1394,16 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 92 "syntactic_analyzer.y"
+#line 74 "syntactic_analyzer.y"
     {
  	 printf("(READ, %s) \n", yytext);
- ;}
-    break;
-
-  case 10:
-
-/* Line 1455 of yacc.c  */
-#line 95 "syntactic_analyzer.y"
-    {
- 	// printf("%s \n", yytext);
  ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 100 "syntactic_analyzer.y"
+#line 80 "syntactic_analyzer.y"
     {
 		 tmp = strdup(yytext);
   		;}
@@ -1439,7 +1412,7 @@ yyreduce:
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 107 "syntactic_analyzer.y"
+#line 87 "syntactic_analyzer.y"
     {
 	operator = strdup(yytext);
  ;}
@@ -1448,7 +1421,7 @@ yyreduce:
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 115 "syntactic_analyzer.y"
+#line 95 "syntactic_analyzer.y"
     {
 	 right_v = strdup(yytext);
  ;}
@@ -1457,7 +1430,7 @@ yyreduce:
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 118 "syntactic_analyzer.y"
+#line 98 "syntactic_analyzer.y"
     {
 	if (operator == NULL) {
 		printf("(INTEGER, %s, t%d) \n", yytext, (yyvsp[(1) - (1)].u).t_count);
@@ -1489,7 +1462,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 1493 "syntactic_analyzer.tab.c"
+#line 1466 "syntactic_analyzer.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1701,7 +1674,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 154 "syntactic_analyzer.y"
+#line 134 "syntactic_analyzer.y"
 
 
 void yyerror (char const *s) {

@@ -406,44 +406,19 @@ char *yytext;
 #include "syntactic_analyzer.tab.h"
 
 int line_count = 0;
-int token_id;
 
 int variables_size = 0;
+int variable_count = 0;
 char variables[1000][1000] = {{0}};
 
 int var_active = 0;
 int t_count = 0;
 
-
-void print(int id, char *text);
-void print_variables();
 void check_declaration(int id, char *text);
 void evaluate_variable(int id, char *text);
 void yyerror (char const *s);
 
-struct Variable {
-	char name[20];
-	int value;
-	int declared;
-};
-
-int variable_count = 0;
-
-struct Program {
-	struct Variable variables[100];
-};
-
-struct Shared {
-	char line[1000];
-	char variable_name[100];
-};
-
-struct Program program;
-struct Shared shared;
-
-void add_variable(char *argument, char *argument2, struct Program program);
-
-#line 447 "lex.yy.c"
+#line 422 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -594,10 +569,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 53 "lexical_analyzer.l"
+#line 28 "lexical_analyzer.l"
 
 
-#line 601 "lex.yy.c"
+#line 576 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -682,10 +657,9 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 55 "lexical_analyzer.l"
+#line 30 "lexical_analyzer.l"
 {
     yylval.u.name = yytext;
-    yylval.u.shared = (struct Shared *)malloc(sizeof(struct Shared));
 
     check_declaration(_PREMENNA, yytext);
     evaluate_variable(_PREMENNA, yytext);
@@ -695,37 +669,36 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 64 "lexical_analyzer.l"
+#line 38 "lexical_analyzer.l"
 {
      return (_NACITAJ);
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 67 "lexical_analyzer.l"
+#line 41 "lexical_analyzer.l"
 {
      return (_VYPIS);
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 70 "lexical_analyzer.l"
+#line 44 "lexical_analyzer.l"
 {
      return (_OPAKUJ);
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 73 "lexical_analyzer.l"
+#line 47 "lexical_analyzer.l"
 {
      return (_JUKAPO);
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 76 "lexical_analyzer.l"
+#line 50 "lexical_analyzer.l"
 {
-    yylval.u.id = yytext;
 
     check_declaration(_ID, yytext);
     evaluate_variable(_ID, yytext);
@@ -735,7 +708,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 84 "lexical_analyzer.l"
+#line 57 "lexical_analyzer.l"
 {
 
      strcpy(yylval.u.konst, yytext);
@@ -751,77 +724,77 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 97 "lexical_analyzer.l"
-{ yylval.u.t_count++; print(_PLUS, yytext); return (_PLUS); }
+#line 70 "lexical_analyzer.l"
+{ yylval.u.t_count++; return (_PLUS); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 98 "lexical_analyzer.l"
-{ yylval.u.t_count++; print(_MINUS, yytext); return (_MINUS); }
+#line 71 "lexical_analyzer.l"
+{ yylval.u.t_count++; return (_MINUS); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 99 "lexical_analyzer.l"
-{ yylval.u.t_count++; print(_MULTIPLY, yytext); return (_MULTIPLY); }
+#line 72 "lexical_analyzer.l"
+{ yylval.u.t_count++; return (_MULTIPLY); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 100 "lexical_analyzer.l"
+#line 73 "lexical_analyzer.l"
 {
     return (_ASSIGN);
 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 103 "lexical_analyzer.l"
+#line 76 "lexical_analyzer.l"
 { return (_EQUAL); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 104 "lexical_analyzer.l"
+#line 77 "lexical_analyzer.l"
 { return (_NOT_EQUAL); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 105 "lexical_analyzer.l"
+#line 78 "lexical_analyzer.l"
 { return (_BIGGER_THAN); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 106 "lexical_analyzer.l"
+#line 79 "lexical_analyzer.l"
 { return (_LESSER_THAN); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 107 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 { return (_BIGGER_EQUAL_THAN); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 108 "lexical_analyzer.l"
+#line 81 "lexical_analyzer.l"
 { return (_LESSER_EQUAL_THAN); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 109 "lexical_analyzer.l"
+#line 82 "lexical_analyzer.l"
 {}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 110 "lexical_analyzer.l"
+#line 83 "lexical_analyzer.l"
 {line_count++;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 111 "lexical_analyzer.l"
+#line 84 "lexical_analyzer.l"
 { printf("lexical error, uknown %s \n", yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 113 "lexical_analyzer.l"
+#line 86 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 825 "lex.yy.c"
+#line 798 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1707,33 +1680,10 @@ int main()
 	return 0;
 	}
 #endif
-#line 113 "lexical_analyzer.l"
+#line 86 "lexical_analyzer.l"
 
 
-void add_variable(char *argument, char *argument2, struct Program program) {
-
-	printf("%s \n", argument);
-
-	strcpy(program.variables[variable_count].name, argument);
-	program.variables[variable_count].declared = 1;
-
-	for (int i = 0; i <= variable_count; i++) {
-		printf("name: %s \n", program.variables[i].name);
-		if (program.variables[i].declared) {
-			printf("declared \n");
-		}
-	}
-
-	variable_count++;
-}
-
-void print(int id, char *text)
- {
-   //   printf("%d %s \n", id, yytext);
-}
-
-void evaluate_variable(int id, char *text)
- {
+void evaluate_variable(int id, char *text) {
     if (id == _ID && !var_active) {
         int i = 0;
         int found = 0;
@@ -1744,6 +1694,7 @@ void evaluate_variable(int id, char *text)
                 found = 1;
             }
         }
+
         if (!found) {
             //printf("semantic error, variable '%s' hasn't been found \n", text);
             yyerror("semantic error, variable hasn't been declared");
@@ -1752,17 +1703,9 @@ void evaluate_variable(int id, char *text)
     }
 }
 
-void print_variables()
-{
-    for (int i = 0; i < variables_size; i++) {
-        printf("%s \n", variables[variables_size]);
-    }
-}
 
-void check_declaration(int id, char *text)
-{
-    if (id == _PREMENNA)
-    {
+void check_declaration(int id, char *text) {
+    if (id == _PREMENNA) {
             var_active = 1;
     }
 

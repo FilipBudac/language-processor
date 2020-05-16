@@ -5,22 +5,10 @@
 #include <string.h>
 
 extern int line_count;
-extern int token_id;
 extern char *yytext;
-extern int *count;
-
-extern struct Program program;
-extern struct Shared shared;
-extern int variable_count;
 
 void yyerror (const char *s);
 int yylex();
-
-//typedef struct {
-//	char *var;
-//        char *name;
-//        char *name2;
-//} semantic_entry;
 
 char *tmp;
 char *operator;
@@ -53,16 +41,10 @@ char *right_v;
 %union {
 	struct {
 		int t_count;
-		int assign;
 
 		char *name;
-		char *var;
-		 char *id;
-		char *hodnota;
-		char *vyraz;
+		char *id;
 		char konst[100];
-
-		struct Shared* shared;
         } u;
 }
 
@@ -92,9 +74,7 @@ PRIKAZ: _NACITAJ _ID {
  | _VYPIS _ID {
  	 printf("(READ, %s) \n", yytext);
  }
- | PRIRADENIE {
- 	// printf("%s \n", yytext);
- }
+ | PRIRADENIE
  | _OPAKUJ PODMIENKA PRIKAZY _JUKAPO
  ;
 PRIRADENIE: _ID {

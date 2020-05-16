@@ -8,42 +8,17 @@
 #include "syntactic_analyzer.tab.h"
 
 int line_count = 0;
-int token_id;
 
 int variables_size = 0;
+int variable_count = 0;
 char variables[1000][1000] = {{0}};
 
 int var_active = 0;
 int t_count = 0;
 
-
-void print(int id, char *text);
-void print_variables();
 void check_declaration(int id, char *text);
 void evaluate_variable(int id, char *text);
 void yyerror (char const *s);
-
-struct Variable {
-	char name[20];
-	int value;
-	int declared;
-};
-
-int variable_count = 0;
-
-struct Program {
-	struct Variable variables[100];
-};
-
-struct Shared {
-	char line[1000];
-	char variable_name[100];
-};
-
-struct Program program;
-struct Shared shared;
-
-void add_variable(char *argument, char *argument2, struct Program program);
 
 %}
 
@@ -54,7 +29,6 @@ konst [-]*[0-9][0-9]*
 
 "premenna" {
     yylval.u.name = yytext;
-    yylval.u.shared = (struct Shared *)malloc(sizeof(struct Shared));
 
     check_declaration(_PREMENNA, yytext);
     evaluate_variable(_PREMENNA, yytext);
@@ -74,7 +48,6 @@ konst [-]*[0-9][0-9]*
      return (_JUKAPO);
 }
 {id} {
-    yylval.u.id = yytext;
 
     check_declaration(_ID, yytext);
     evaluate_variable(_ID, yytext);
@@ -94,9 +67,9 @@ konst [-]*[0-9][0-9]*
      return (_KONST);
 }
 
-"+" { yylval.u.t_count++; print(_PLUS, yytext); return (_PLUS); }
-"-" { yylval.u.t_count++; print(_MINUS, yytext); return (_MINUS); }
-"*" { yylval.u.t_count++; print(_MULTIPLY, yytext); return (_MULTIPLY); }
+"+" { yylval.u.t_count++; return (_PLUS); }
+"-" { yylval.u.t_count++; return (_MINUS); }
+"*" { yylval.u.t_count++; return (_MULTIPLY); }
 "=" {
     return (_ASSIGN);
 }
@@ -112,30 +85,7 @@ konst [-]*[0-9][0-9]*
 
 %%
 
-void add_variable(char *argument, char *argument2, struct Program program) {
-
-	printf("%s \n", argument);
-
-	strcpy(program.variables[variable_count].name, argument);
-	program.variables[variable_count].declared = 1;
-
-	for (int i = 0; i <= variable_count; i++) {
-		printf("name: %s \n", program.variables[i].name);
-		if (program.variables[i].declared) {
-			printf("declared \n");
-		}
-	}
-
-	variable_count++;
-}
-
-void print(int id, char *text)
- {
-   //   printf("%d %s \n", id, yytext);
-}
-
-void evaluate_variable(int id, char *text)
- {
+void evaluate_variable(int id, char *text) {
     if (id == _ID && !var_active) {
         int i = 0;
         int found = 0;
@@ -146,6 +96,7 @@ void evaluate_variable(int id, char *text)
                 found = 1;
             }
         }
+
         if (!found) {
             //printf("semantic error, variable '%s' hasn't been found \n", text);
             yyerror("semantic error, variable hasn't been declared");
@@ -154,17 +105,9 @@ void evaluate_variable(int id, char *text)
     }
 }
 
-void print_variables()
-{
-    for (int i = 0; i < variables_size; i++) {
-        printf("%s \n", variables[variables_size]);
-    }
-}
 
-void check_declaration(int id, char *text)
-{
-    if (id == _PREMENNA)
-    {
+void check_declaration(int id, char *text) {
+    if (id == _PREMENNA) {
             var_active = 1;
     }
 
