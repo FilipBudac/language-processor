@@ -7,39 +7,44 @@ Grammar
 
     0 $accept: PROGRAM $end
 
-    1 PROGRAM: _BEGIN PRIKAZY _END
+    1 $@1: /* empty */
 
-    2 PRIKAZY: PRIKAZ _SEMICOLON PRIKAZY
-    3        | /* empty */
+    2 PROGRAM: _BEGIN PRIKAZY _END $@1 '\n'
 
-    4 PRIKAZ: _P
-    5       | _NUM
-    6       | _LOAD
+    3 PRIKAZY: PRIKAZ _SEMICOLON PRIKAZY
+    4        | /* empty */
+
+    5 PRIKAZ: _P
+    6       | _NUM
+    7       | _LOAD
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
+'\n' (10) 2
 error (256)
-_BEGIN (258) 1
-_END (259) 1
-_SEMICOLON (260) 2
-_P (261) 4
-_NUM (262) 5
-_LOAD (263) 6
+_BEGIN (258) 2
+_END (259) 2
+_SEMICOLON (260) 3
+_P (261) 5
+_NUM (262) 6
+_LOAD (263) 7
 _UNKNOWN (264)
 
 
 Nonterminals, with rules where they appear
 
-$accept (10)
+$accept (11)
     on left: 0
-PROGRAM (11)
-    on left: 1, on right: 0
-PRIKAZY (12)
-    on left: 2 3, on right: 1 2
-PRIKAZ (13)
-    on left: 4 5 6, on right: 2
+PROGRAM (12)
+    on left: 2, on right: 0
+$@1 (13)
+    on left: 1, on right: 2
+PRIKAZY (14)
+    on left: 3 4, on right: 2 3
+PRIKAZ (15)
+    on left: 5 6 7, on right: 3
 
 
 state 0
@@ -53,13 +58,13 @@ state 0
 
 state 1
 
-    1 PROGRAM: _BEGIN . PRIKAZY _END
+    2 PROGRAM: _BEGIN . PRIKAZY _END $@1 '\n'
 
     _P     shift, and go to state 3
     _NUM   shift, and go to state 4
     _LOAD  shift, and go to state 5
 
-    $default  reduce using rule 3 (PRIKAZY)
+    $default  reduce using rule 4 (PRIKAZY)
 
     PRIKAZY  go to state 6
     PRIKAZ   go to state 7
@@ -74,35 +79,35 @@ state 2
 
 state 3
 
-    4 PRIKAZ: _P .
-
-    $default  reduce using rule 4 (PRIKAZ)
-
-
-state 4
-
-    5 PRIKAZ: _NUM .
+    5 PRIKAZ: _P .
 
     $default  reduce using rule 5 (PRIKAZ)
 
 
-state 5
+state 4
 
-    6 PRIKAZ: _LOAD .
+    6 PRIKAZ: _NUM .
 
     $default  reduce using rule 6 (PRIKAZ)
 
 
+state 5
+
+    7 PRIKAZ: _LOAD .
+
+    $default  reduce using rule 7 (PRIKAZ)
+
+
 state 6
 
-    1 PROGRAM: _BEGIN PRIKAZY . _END
+    2 PROGRAM: _BEGIN PRIKAZY . _END $@1 '\n'
 
     _END  shift, and go to state 9
 
 
 state 7
 
-    2 PRIKAZY: PRIKAZ . _SEMICOLON PRIKAZY
+    3 PRIKAZY: PRIKAZ . _SEMICOLON PRIKAZY
 
     _SEMICOLON  shift, and go to state 10
 
@@ -116,27 +121,43 @@ state 8
 
 state 9
 
-    1 PROGRAM: _BEGIN PRIKAZY _END .
+    2 PROGRAM: _BEGIN PRIKAZY _END . $@1 '\n'
 
-    $default  reduce using rule 1 (PROGRAM)
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 11
 
 
 state 10
 
-    2 PRIKAZY: PRIKAZ _SEMICOLON . PRIKAZY
+    3 PRIKAZY: PRIKAZ _SEMICOLON . PRIKAZY
 
     _P     shift, and go to state 3
     _NUM   shift, and go to state 4
     _LOAD  shift, and go to state 5
 
-    $default  reduce using rule 3 (PRIKAZY)
+    $default  reduce using rule 4 (PRIKAZY)
 
-    PRIKAZY  go to state 11
+    PRIKAZY  go to state 12
     PRIKAZ   go to state 7
 
 
 state 11
 
-    2 PRIKAZY: PRIKAZ _SEMICOLON PRIKAZY .
+    2 PROGRAM: _BEGIN PRIKAZY _END $@1 . '\n'
 
-    $default  reduce using rule 2 (PRIKAZY)
+    '\n'  shift, and go to state 13
+
+
+state 12
+
+    3 PRIKAZY: PRIKAZ _SEMICOLON PRIKAZY .
+
+    $default  reduce using rule 3 (PRIKAZY)
+
+
+state 13
+
+    2 PROGRAM: _BEGIN PRIKAZY _END $@1 '\n' .
+
+    $default  reduce using rule 2 (PROGRAM)

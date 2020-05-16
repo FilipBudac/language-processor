@@ -22,26 +22,28 @@ Grammar
     9       | PRIRADENIE
    10       | _OPAKUJ PODMIENKA PRIKAZY _JUKAPO
 
-   11 PRIRADENIE: _ID _ASSIGN VYRAZ
+   11 $@1: /* empty */
 
-   12 VYRAZ: HODNOTA OPERATOR HODNOTA
-   13      | HODNOTA
+   12 PRIRADENIE: _ID $@1 "=" VYRAZ
 
-   14 OPERATOR: _PLUS
-   15         | _MINUS
-   16         | _MULTIPLY
+   13 VYRAZ: HODNOTA OPERATOR HODNOTA
+   14      | HODNOTA
 
-   17 PODMIENKA: HODNOTA KOMPARATOR HODNOTA
+   15 OPERATOR: "+"
+   16         | "-"
+   17         | "*"
 
-   18 HODNOTA: _ID
-   19        | _KONST
+   18 PODMIENKA: HODNOTA KOMPARATOR HODNOTA
 
-   20 KOMPARATOR: _LESSER_THAN
-   21           | _BIGGER_THAN
-   22           | _LESSER_EQUAL_THAN
-   23           | _BIGGER_EQUAL_THAN
-   24           | _EQUAL
-   25           | _NOT_EQUAL
+   19 HODNOTA: _ID
+   20        | _KONST
+
+   21 KOMPARATOR: "<"
+   22           | ">"
+   23           | "<="
+   24           | ">="
+   25           | "=="
+   26           | "!="
 
 
 Terminals, with rules where they appear
@@ -49,22 +51,22 @@ Terminals, with rules where they appear
 $end (0) 0
 error (256)
 _PREMENNA (258) 4
-_ID (259) 4 7 8 11 18
+_ID (259) 4 7 8 12 19
 _NACITAJ (260) 7
 _VYPIS (261) 8
 _OPAKUJ (262) 10
 _JUKAPO (263) 10
-_KONST (264) 19
-_PLUS (265) 14
-_MINUS (266) 15
-_MULTIPLY (267) 16
-_ASSIGN (268) 11
-_EQUAL (269) 24
-_NOT_EQUAL (270) 25
-_BIGGER_THAN (271) 21
-_LESSER_THAN (272) 20
-_BIGGER_EQUAL_THAN (273) 23
-_LESSER_EQUAL_THAN (274) 22
+_KONST (264) 20
+"+" (265) 15
+"-" (266) 16
+"*" (267) 17
+"=" (268) 12
+"==" (269) 25
+"!=" (270) 26
+">" (271) 22
+"<" (272) 21
+">=" (273) 24
+"<=" (274) 23
 _UNKNOWN (275)
 
 
@@ -83,17 +85,19 @@ PRIKAZY (25)
 PRIKAZ (26)
     on left: 7 8 9 10, on right: 5
 PRIRADENIE (27)
-    on left: 11, on right: 9
-VYRAZ (28)
-    on left: 12 13, on right: 11
-OPERATOR (29)
-    on left: 14 15 16, on right: 12
-PODMIENKA (30)
-    on left: 17, on right: 10
-HODNOTA (31)
-    on left: 18 19, on right: 12 13 17
-KOMPARATOR (32)
-    on left: 20 21 22 23 24 25, on right: 17
+    on left: 12, on right: 9
+$@1 (28)
+    on left: 11, on right: 12
+VYRAZ (29)
+    on left: 13 14, on right: 12
+OPERATOR (30)
+    on left: 15 16 17, on right: 13
+PODMIENKA (31)
+    on left: 18, on right: 10
+HODNOTA (32)
+    on left: 19 20, on right: 13 14 18
+KOMPARATOR (33)
+    on left: 21 22 23 24 25 26, on right: 18
 
 
 state 0
@@ -167,9 +171,11 @@ state 6
 
 state 7
 
-   11 PRIRADENIE: _ID . _ASSIGN VYRAZ
+   12 PRIRADENIE: _ID . $@1 "=" VYRAZ
 
-    _ASSIGN  shift, and go to state 15
+    $default  reduce using rule 11 ($@1)
+
+    $@1  go to state 15
 
 
 state 8
@@ -236,13 +242,9 @@ state 14
 
 state 15
 
-   11 PRIRADENIE: _ID _ASSIGN . VYRAZ
+   12 PRIRADENIE: _ID $@1 . "=" VYRAZ
 
-    _ID     shift, and go to state 18
-    _KONST  shift, and go to state 19
-
-    VYRAZ    go to state 23
-    HODNOTA  go to state 24
+    "="  shift, and go to state 23
 
 
 state 16
@@ -261,16 +263,16 @@ state 17
 
 state 18
 
-   18 HODNOTA: _ID .
+   19 HODNOTA: _ID .
 
-    $default  reduce using rule 18 (HODNOTA)
+    $default  reduce using rule 19 (HODNOTA)
 
 
 state 19
 
-   19 HODNOTA: _KONST .
+   20 HODNOTA: _KONST .
 
-    $default  reduce using rule 19 (HODNOTA)
+    $default  reduce using rule 20 (HODNOTA)
 
 
 state 20
@@ -284,23 +286,23 @@ state 20
 
     $default  reduce using rule 6 (PRIKAZY)
 
-    PRIKAZY     go to state 25
+    PRIKAZY     go to state 24
     PRIKAZ      go to state 12
     PRIRADENIE  go to state 13
 
 
 state 21
 
-   17 PODMIENKA: HODNOTA . KOMPARATOR HODNOTA
+   18 PODMIENKA: HODNOTA . KOMPARATOR HODNOTA
 
-    _EQUAL              shift, and go to state 26
-    _NOT_EQUAL          shift, and go to state 27
-    _BIGGER_THAN        shift, and go to state 28
-    _LESSER_THAN        shift, and go to state 29
-    _BIGGER_EQUAL_THAN  shift, and go to state 30
-    _LESSER_EQUAL_THAN  shift, and go to state 31
+    "=="  shift, and go to state 25
+    "!="  shift, and go to state 26
+    ">"   shift, and go to state 27
+    "<"   shift, and go to state 28
+    ">="  shift, and go to state 29
+    "<="  shift, and go to state 30
 
-    KOMPARATOR  go to state 32
+    KOMPARATOR  go to state 31
 
 
 state 22
@@ -312,131 +314,142 @@ state 22
 
 state 23
 
-   11 PRIRADENIE: _ID _ASSIGN VYRAZ .
+   12 PRIRADENIE: _ID $@1 "=" . VYRAZ
 
-    $default  reduce using rule 11 (PRIRADENIE)
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    VYRAZ    go to state 32
+    HODNOTA  go to state 33
 
 
 state 24
 
-   12 VYRAZ: HODNOTA . OPERATOR HODNOTA
-   13      | HODNOTA .
+   10 PRIKAZ: _OPAKUJ PODMIENKA PRIKAZY . _JUKAPO
 
-    _PLUS      shift, and go to state 33
-    _MINUS     shift, and go to state 34
-    _MULTIPLY  shift, and go to state 35
-
-    $default  reduce using rule 13 (VYRAZ)
-
-    OPERATOR  go to state 36
+    _JUKAPO  shift, and go to state 34
 
 
 state 25
 
-   10 PRIKAZ: _OPAKUJ PODMIENKA PRIKAZY . _JUKAPO
-
-    _JUKAPO  shift, and go to state 37
-
-
-state 26
-
-   24 KOMPARATOR: _EQUAL .
-
-    $default  reduce using rule 24 (KOMPARATOR)
-
-
-state 27
-
-   25 KOMPARATOR: _NOT_EQUAL .
+   25 KOMPARATOR: "==" .
 
     $default  reduce using rule 25 (KOMPARATOR)
 
 
+state 26
+
+   26 KOMPARATOR: "!=" .
+
+    $default  reduce using rule 26 (KOMPARATOR)
+
+
+state 27
+
+   22 KOMPARATOR: ">" .
+
+    $default  reduce using rule 22 (KOMPARATOR)
+
+
 state 28
 
-   21 KOMPARATOR: _BIGGER_THAN .
+   21 KOMPARATOR: "<" .
 
     $default  reduce using rule 21 (KOMPARATOR)
 
 
 state 29
 
-   20 KOMPARATOR: _LESSER_THAN .
+   24 KOMPARATOR: ">=" .
 
-    $default  reduce using rule 20 (KOMPARATOR)
+    $default  reduce using rule 24 (KOMPARATOR)
 
 
 state 30
 
-   23 KOMPARATOR: _BIGGER_EQUAL_THAN .
+   23 KOMPARATOR: "<=" .
 
     $default  reduce using rule 23 (KOMPARATOR)
 
 
 state 31
 
-   22 KOMPARATOR: _LESSER_EQUAL_THAN .
+   18 PODMIENKA: HODNOTA KOMPARATOR . HODNOTA
 
-    $default  reduce using rule 22 (KOMPARATOR)
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    HODNOTA  go to state 35
 
 
 state 32
 
-   17 PODMIENKA: HODNOTA KOMPARATOR . HODNOTA
+   12 PRIRADENIE: _ID $@1 "=" VYRAZ .
 
-    _ID     shift, and go to state 18
-    _KONST  shift, and go to state 19
-
-    HODNOTA  go to state 38
+    $default  reduce using rule 12 (PRIRADENIE)
 
 
 state 33
 
-   14 OPERATOR: _PLUS .
+   13 VYRAZ: HODNOTA . OPERATOR HODNOTA
+   14      | HODNOTA .
 
-    $default  reduce using rule 14 (OPERATOR)
+    "+"  shift, and go to state 36
+    "-"  shift, and go to state 37
+    "*"  shift, and go to state 38
+
+    $default  reduce using rule 14 (VYRAZ)
+
+    OPERATOR  go to state 39
 
 
 state 34
-
-   15 OPERATOR: _MINUS .
-
-    $default  reduce using rule 15 (OPERATOR)
-
-
-state 35
-
-   16 OPERATOR: _MULTIPLY .
-
-    $default  reduce using rule 16 (OPERATOR)
-
-
-state 36
-
-   12 VYRAZ: HODNOTA OPERATOR . HODNOTA
-
-    _ID     shift, and go to state 18
-    _KONST  shift, and go to state 19
-
-    HODNOTA  go to state 39
-
-
-state 37
 
    10 PRIKAZ: _OPAKUJ PODMIENKA PRIKAZY _JUKAPO .
 
     $default  reduce using rule 10 (PRIKAZ)
 
 
+state 35
+
+   18 PODMIENKA: HODNOTA KOMPARATOR HODNOTA .
+
+    $default  reduce using rule 18 (PODMIENKA)
+
+
+state 36
+
+   15 OPERATOR: "+" .
+
+    $default  reduce using rule 15 (OPERATOR)
+
+
+state 37
+
+   16 OPERATOR: "-" .
+
+    $default  reduce using rule 16 (OPERATOR)
+
+
 state 38
 
-   17 PODMIENKA: HODNOTA KOMPARATOR HODNOTA .
+   17 OPERATOR: "*" .
 
-    $default  reduce using rule 17 (PODMIENKA)
+    $default  reduce using rule 17 (OPERATOR)
 
 
 state 39
 
-   12 VYRAZ: HODNOTA OPERATOR HODNOTA .
+   13 VYRAZ: HODNOTA OPERATOR . HODNOTA
 
-    $default  reduce using rule 12 (VYRAZ)
+    _ID     shift, and go to state 18
+    _KONST  shift, and go to state 19
+
+    HODNOTA  go to state 40
+
+
+state 40
+
+   13 VYRAZ: HODNOTA OPERATOR HODNOTA .
+
+    $default  reduce using rule 13 (VYRAZ)

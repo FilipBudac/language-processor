@@ -350,16 +350,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   7
+#define YYLAST   8
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  10
+#define YYNTOKENS  11
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  4
+#define YYNNTS  5
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  7
+#define YYNRULES  8
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  12
+#define YYNSTATES  14
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -372,7 +372,7 @@ union yyalloc
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      10,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -405,20 +405,21 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     7,    11,    12,    14,    16
+       0,     0,     3,     4,    10,    14,    15,    17,    19
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      11,     0,    -1,     3,    12,     4,    -1,    13,     5,    12,
-      -1,    -1,     6,    -1,     7,    -1,     8,    -1
+      12,     0,    -1,    -1,     3,    14,     4,    13,    10,    -1,
+      15,     5,    14,    -1,    -1,     6,    -1,     7,    -1,     8,
+      -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    35,    35,    37,    38,    40,    41,    42
+       0,    34,    34,    34,    36,    37,    39,    40,    41
 };
 #endif
 
@@ -428,7 +429,8 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "_BEGIN", "_END", "_SEMICOLON", "_P",
-  "_NUM", "_LOAD", "_UNKNOWN", "$accept", "PROGRAM", "PRIKAZY", "PRIKAZ", 0
+  "_NUM", "_LOAD", "_UNKNOWN", "'\\n'", "$accept", "PROGRAM", "$@1",
+  "PRIKAZY", "PRIKAZ", 0
 };
 #endif
 
@@ -437,20 +439,21 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264
+       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+      10
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    10,    11,    12,    12,    13,    13,    13
+       0,    11,    13,    12,    14,    14,    15,    15,    15
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     3,     3,     0,     1,     1,     1
+       0,     2,     0,     5,     3,     0,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -458,14 +461,14 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     4,     0,     5,     6,     7,     0,     0,     1,     2,
-       4,     3
+       0,     5,     0,     6,     7,     8,     0,     0,     1,     2,
+       5,     0,     4,     3
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     6,     7
+      -1,     2,    11,     6,     7
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -474,13 +477,13 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yypact[] =
 {
        0,    -6,     4,    -7,    -7,    -7,     1,     2,    -7,    -7,
-      -6,    -7
+      -6,    -4,    -7,    -7
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7,    -4,    -7
+      -7,    -7,    -7,    -2,    -7
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -490,20 +493,20 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       3,     4,     5,     1,     8,     9,    11,    10
+       3,     4,     5,     1,     8,     9,    13,    10,    12
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       6,     7,     8,     3,     0,     4,    10,     5
+       6,     7,     8,     3,     0,     4,    10,     5,    10
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,    11,     6,     7,     8,    12,    13,     0,     4,
-       5,    12
+       0,     3,    12,     6,     7,     8,    14,    15,     0,     4,
+       5,    13,    14,    10
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1317,28 +1320,28 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 35 "syntactic_analyzer.y"
+#line 34 "syntactic_analyzer.y"
     {vypis((yyvsp[(2) - (3)]));;}
-    break;
-
-  case 3:
-
-/* Line 1455 of yacc.c  */
-#line 37 "syntactic_analyzer.y"
-    {(yyval).a = 1 + (yyvsp[(3) - (3)]).a;;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 38 "syntactic_analyzer.y"
+#line 36 "syntactic_analyzer.y"
+    {(yyval).a = 1 + (yyvsp[(3) - (3)]).a;;}
+    break;
+
+  case 5:
+
+/* Line 1455 of yacc.c  */
+#line 37 "syntactic_analyzer.y"
     {(yyval).a = 0;;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1342 "syntactic_analyzer.tab.c"
+#line 1345 "syntactic_analyzer.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1550,7 +1553,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 45 "syntactic_analyzer.y"
+#line 44 "syntactic_analyzer.y"
 
 
 void vypis(YYSTYPE argument)
@@ -1562,9 +1565,9 @@ int main()
 {
 	if (0 == yyparse())
 	{
-		printf("vyraz bol spravny syntakticky\n");
+		printf("vyraz bol syntakticky spravny\n");
 	} else {
-		printf("vyraz bol nespravny syntakticky\n");
+		printf("vyraz bol syntakticky nespravny\n");
 	}
 	return 0;
 }

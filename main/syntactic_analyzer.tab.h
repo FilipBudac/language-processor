@@ -67,12 +67,26 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 33 "syntactic_analyzer.y"
-int num; char id;
+#line 53 "syntactic_analyzer.y"
+
+	struct {
+		int t_count;
+		int assign;
+
+		char *name;
+		char *var;
+		 char *id;
+		char *hodnota;
+		char *vyraz;
+		char konst[100];
+
+		struct Shared* shared;
+        } u;
+
 
 
 /* Line 1676 of yacc.c  */
-#line 76 "syntactic_analyzer.tab.h"
+#line 90 "syntactic_analyzer.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
