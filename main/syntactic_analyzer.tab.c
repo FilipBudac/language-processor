@@ -70,6 +70,7 @@
 /* Line 189 of yacc.c  */
 #line 1 "syntactic_analyzer.y"
 
+// vyhodnotia sa najskor spodne listy a postupne sa potom zacnu prikazy smerom navrh [pre kazdy riadok
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -78,17 +79,21 @@
 extern int line_count;
 extern char *yytext;
 
-void yyerror (const char *s);
 int yylex();
 
 char *tmp;
 char *operator;
 char *right_v;
 
+char *right_konst_s;
+int current_count = 0;
+
+void yyerror (const char *s);
+
 
 
 /* Line 189 of yacc.c  */
-#line 92 "syntactic_analyzer.tab.c"
+#line 97 "syntactic_analyzer.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -143,20 +148,20 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 41 "syntactic_analyzer.y"
+#line 46 "syntactic_analyzer.y"
 
 	struct {
 		int t_count;
 
 		char *name;
-		char *id;
+		char id[100];
 		char konst[100];
         } u;
 
 
 
 /* Line 214 of yacc.c  */
-#line 160 "syntactic_analyzer.tab.c"
+#line 165 "syntactic_analyzer.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -168,7 +173,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 172 "syntactic_analyzer.tab.c"
+#line 177 "syntactic_analyzer.tab.c"
 
 #ifdef short
 # undef short
@@ -459,9 +464,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    61,    61,    63,    64,    66,    68,    69,    71,    74,
-      77,    78,    80,    80,    84,    85,    87,    90,    91,    93,
-      95,    98,   126,   127,   128,   129,   130,   131
+       0,    65,    65,    67,    68,    70,    72,    73,    75,    78,
+      81,   122,   124,   124,   128,   129,   131,   134,   137,   141,
+     143,   146,   164,   165,   166,   167,   168,   169
 };
 #endif
 
@@ -1385,7 +1390,7 @@ yyreduce:
         case 8:
 
 /* Line 1455 of yacc.c  */
-#line 71 "syntactic_analyzer.y"
+#line 75 "syntactic_analyzer.y"
     {
 	 printf("(WRITE, %s) \n", yytext);
  ;}
@@ -1394,34 +1399,106 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 74 "syntactic_analyzer.y"
+#line 78 "syntactic_analyzer.y"
     {
  	 printf("(READ, %s) \n", yytext);
+ ;}
+    break;
+
+  case 10:
+
+/* Line 1455 of yacc.c  */
+#line 81 "syntactic_analyzer.y"
+    {
+	printf("(PRIRADENIE) \n");
+
+	if (operator == NULL && right_konst_s == NULL) {
+		printf("(:=, %s, sizeof(Integer), %s) \n", right_v, tmp);
+
+		right_v = NULL;
+		tmp = NULL;
+	}
+
+	if (operator == NULL && right_konst_s != NULL) {
+		printf("(INTEGER, %s, t%d) \n", right_konst_s, current_count);
+		printf("(:=, t%d, sizeof(Integer), %s) \n", current_count, tmp);
+
+		right_konst_s = NULL;
+		tmp = NULL;
+	}
+
+	if (operator != NULL && atoi(right_konst_s) < 0) {
+		printf("(INTEGER, %d, t%d) \n", atoi(right_konst_s) * (-1), current_count - 2);
+		printf("(-, t%d, t%d) \n", current_count - 2, current_count - 1);
+		printf("(%s, %s, t%d, t%d) \n", operator, right_v, current_count - 1, current_count); // tmp
+		printf("(:=, t%d, sizeof(Integer), %s) \n", current_count, tmp);
+
+		operator = NULL;
+		right_konst_s = NULL;
+		tmp = NULL;
+	}
+
+	if (operator != NULL) {
+		printf("(INTEGER, %s, t%d) \n", right_konst_s, current_count - 1);
+		printf("(%s, %s, t%d, t%d) \n", operator, right_v, current_count - 1, current_count);
+		printf("(:=, t%d, sizeof(Integer), %s) \n", current_count, tmp);
+
+		operator = NULL;
+		right_konst_s = NULL;
+		tmp = NULL;
+	}
+
+	printf("------------------------------- \n");
  ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 80 "syntactic_analyzer.y"
+#line 124 "syntactic_analyzer.y"
     {
 		 tmp = strdup(yytext);
   		;}
     break;
 
+  case 14:
+
+/* Line 1455 of yacc.c  */
+#line 128 "syntactic_analyzer.y"
+    {  ;}
+    break;
+
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 87 "syntactic_analyzer.y"
+#line 131 "syntactic_analyzer.y"
     {
 	operator = strdup(yytext);
+ ;}
+    break;
+
+  case 17:
+
+/* Line 1455 of yacc.c  */
+#line 134 "syntactic_analyzer.y"
+    {
+	operator = strdup(yytext);
+ ;}
+    break;
+
+  case 18:
+
+/* Line 1455 of yacc.c  */
+#line 137 "syntactic_analyzer.y"
+    {
+        operator = strdup(yytext);
  ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 95 "syntactic_analyzer.y"
+#line 143 "syntactic_analyzer.y"
     {
 	 right_v = strdup(yytext);
  ;}
@@ -1430,39 +1507,29 @@ yyreduce:
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 98 "syntactic_analyzer.y"
+#line 146 "syntactic_analyzer.y"
     {
 	if (operator == NULL) {
-		printf("(INTEGER, %s, t%d) \n", yytext, (yyvsp[(1) - (1)].u).t_count);
-		printf("(:=, t%d, sizeof(Integer), %s) \n", (yyvsp[(1) - (1)].u).t_count, tmp);
+		right_konst_s = strdup(yytext);
+		current_count = (yyvsp[(1) - (1)].u).t_count;
 	}
 
 	if (operator != NULL && atoi(yytext) < 0) {
-		printf("(INTEGER, %d, t%d) \n", atoi(yytext) * (-1), (yyvsp[(1) - (1)].u).t_count - 2);
-		printf("(-, t%d, t%d) \n", (yyvsp[(1) - (1)].u).t_count - 2, (yyvsp[(1) - (1)].u).t_count - 1);
-		printf("(%s, %s, t%d, t%d) \n", operator, right_v, (yyvsp[(1) - (1)].u).t_count - 1, (yyvsp[(1) - (1)].u).t_count); // tmp
-		printf("(:=, t%d, sizeof(Integer), %s) \n", (yyvsp[(1) - (1)].u).t_count, tmp);
-
-		operator = NULL;
+		right_konst_s = strdup(yytext);
+		current_count = (yyvsp[(1) - (1)].u).t_count;
 	}
 
 	if (operator != NULL) {
-		printf("(INTEGER, %s, t%d) \n", yytext, (yyvsp[(1) - (1)].u).t_count - 1);
-		printf("(%s, %s, t%d, t%d) \n", operator, right_v, (yyvsp[(1) - (1)].u).t_count - 1, (yyvsp[(1) - (1)].u).t_count);
-		printf("(:=, t%d, sizeof(Integer), %s) \n", (yyvsp[(1) - (1)].u).t_count, tmp);
-
-		operator = NULL;
+		right_konst_s = strdup(yytext);
+		current_count = (yyvsp[(1) - (1)].u).t_count;
 	}
-
-	printf("------------------------------- \n");
-
  ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1466 "syntactic_analyzer.tab.c"
+#line 1533 "syntactic_analyzer.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1674,7 +1741,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 134 "syntactic_analyzer.y"
+#line 172 "syntactic_analyzer.y"
 
 
 void yyerror (char const *s) {

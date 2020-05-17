@@ -1,4 +1,5 @@
 %{
+// vyhodnotia sa najskor spodne listy a postupne sa potom zacnu prikazy smerom navrh [pre kazdy riadok
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,12 +8,16 @@
 extern int line_count;
 extern char *yytext;
 
-void yyerror (const char *s);
 int yylex();
 
 char *tmp;
 char *operator;
 char *right_v;
+
+char *right_konst_s;
+int current_count = 0;
+
+void yyerror (const char *s);
 
 %}
 
@@ -43,7 +48,7 @@ char *right_v;
 		int t_count;
 
 		char *name;
-		char *id;
+		char id[100];
 		char konst[100];
         } u;
 }
@@ -53,8 +58,7 @@ char *right_v;
 %type <u> DEKLARACIA
 %type <u> HODNOTA
 %type <u> VYRAZ
-//%type <u> PRIRADENIE
-//%type <u> VYRAZ
+%type <u> PRIRADENIE
 
 %%
 
@@ -74,21 +78,65 @@ PRIKAZ: _NACITAJ _ID {
  | _VYPIS _ID {
  	 printf("(READ, %s) \n", yytext);
  }
- | PRIRADENIE
+ | PRIRADENIE {
+	printf("(PRIRADENIE) \n");
+
+	if (operator == NULL && right_konst_s == NULL) {
+		printf("(:=, %s, sizeof(Integer), %s) \n", right_v, tmp);
+
+		right_v = NULL;
+		tmp = NULL;
+	}
+
+	if (operator == NULL && right_konst_s != NULL) {
+		printf("(INTEGER, %s, t%d) \n", right_konst_s, current_count);
+		printf("(:=, t%d, sizeof(Integer), %s) \n", current_count, tmp);
+
+		right_konst_s = NULL;
+		tmp = NULL;
+	}
+
+	if (operator != NULL && atoi(right_konst_s) < 0) {
+		printf("(INTEGER, %d, t%d) \n", atoi(right_konst_s) * (-1), current_count - 2);
+		printf("(-, t%d, t%d) \n", current_count - 2, current_count - 1);
+		printf("(%s, %s, t%d, t%d) \n", operator, right_v, current_count - 1, current_count); // tmp
+		printf("(:=, t%d, sizeof(Integer), %s) \n", current_count, tmp);
+
+		operator = NULL;
+		right_konst_s = NULL;
+		tmp = NULL;
+	}
+
+	if (operator != NULL) {
+		printf("(INTEGER, %s, t%d) \n", right_konst_s, current_count - 1);
+		printf("(%s, %s, t%d, t%d) \n", operator, right_v, current_count - 1, current_count);
+		printf("(:=, t%d, sizeof(Integer), %s) \n", current_count, tmp);
+
+		operator = NULL;
+		right_konst_s = NULL;
+		tmp = NULL;
+	}
+
+	printf("------------------------------- \n");
+ }
  | _OPAKUJ PODMIENKA PRIKAZY _JUKAPO
  ;
 PRIRADENIE: _ID {
 		 tmp = strdup(yytext);
   		} _ASSIGN VYRAZ
  ;
-VYRAZ: HODNOTA OPERATOR HODNOTA
+VYRAZ: HODNOTA OPERATOR HODNOTA {  }
  | HODNOTA
  ;
 OPERATOR: _PLUS {
 	operator = strdup(yytext);
  }
- | _MINUS
- | _MULTIPLY
+ | _MINUS {
+	operator = strdup(yytext);
+ }
+ | _MULTIPLY {
+        operator = strdup(yytext);
+ }
  ;
  PODMIENKA: HODNOTA KOMPARATOR HODNOTA
  ;
@@ -97,29 +145,19 @@ HODNOTA: _ID {
  }
  | _KONST {
 	if (operator == NULL) {
-		printf("(INTEGER, %s, t%d) \n", yytext, $1.t_count);
-		printf("(:=, t%d, sizeof(Integer), %s) \n", $1.t_count, tmp);
+		right_konst_s = strdup(yytext);
+		current_count = $1.t_count;
 	}
 
 	if (operator != NULL && atoi(yytext) < 0) {
-		printf("(INTEGER, %d, t%d) \n", atoi(yytext) * (-1), $1.t_count - 2);
-		printf("(-, t%d, t%d) \n", $1.t_count - 2, $1.t_count - 1);
-		printf("(%s, %s, t%d, t%d) \n", operator, right_v, $1.t_count - 1, $1.t_count); // tmp
-		printf("(:=, t%d, sizeof(Integer), %s) \n", $1.t_count, tmp);
-
-		operator = NULL;
+		right_konst_s = strdup(yytext);
+		current_count = $1.t_count;
 	}
 
 	if (operator != NULL) {
-		printf("(INTEGER, %s, t%d) \n", yytext, $1.t_count - 1);
-		printf("(%s, %s, t%d, t%d) \n", operator, right_v, $1.t_count - 1, $1.t_count);
-		printf("(:=, t%d, sizeof(Integer), %s) \n", $1.t_count, tmp);
-
-		operator = NULL;
+		right_konst_s = strdup(yytext);
+		current_count = $1.t_count;
 	}
-
-	printf("------------------------------- \n");
-
  }
  ;
 

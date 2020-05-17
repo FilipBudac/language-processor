@@ -11,10 +11,11 @@ int line_count = 0;
 
 int variables_size = 0;
 int variable_count = 0;
-char variables[1000][1000] = {{0}};
 
 int var_active = 0;
 int t_count = 0;
+
+char variables[1000][1000] = {{0}};
 
 void check_declaration(int id, char *text);
 void evaluate_variable(int id, char *text);
@@ -28,7 +29,6 @@ konst [-]*[0-9][0-9]*
 %%
 
 "premenna" {
-    yylval.u.name = yytext;
 
     check_declaration(_PREMENNA, yytext);
     evaluate_variable(_PREMENNA, yytext);
@@ -48,6 +48,7 @@ konst [-]*[0-9][0-9]*
      return (_JUKAPO);
 }
 {id} {
+    strcpy(yylval.u.id, yytext);
 
     check_declaration(_ID, yytext);
     evaluate_variable(_ID, yytext);
@@ -67,9 +68,21 @@ konst [-]*[0-9][0-9]*
      return (_KONST);
 }
 
-"+" { yylval.u.t_count++; return (_PLUS); }
-"-" { yylval.u.t_count++; return (_MINUS); }
-"*" { yylval.u.t_count++; return (_MULTIPLY); }
+"+" {
+    yylval.u.t_count++;
+
+    return (_PLUS);
+}
+"-" {
+    yylval.u.t_count++;
+
+    return (_MINUS);
+  }
+"*" {
+    yylval.u.t_count++;
+
+    return (_MULTIPLY);
+}
 "=" {
     return (_ASSIGN);
 }
@@ -80,7 +93,7 @@ konst [-]*[0-9][0-9]*
 ">=" { return (_BIGGER_EQUAL_THAN); }
 "<=" { return (_LESSER_EQUAL_THAN); }
 [ \t] {}
-[ \n] {line_count++;}
+[ \n] { line_count++; }
 . { printf("lexical error, uknown %s \n", yytext); }
 
 %%

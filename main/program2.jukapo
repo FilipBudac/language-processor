@@ -5,7 +5,8 @@ premenna d
 vypis a
 nacitaj b
 a = 1
-a = c + -2
 a = d + 10
-a = 5
-a = b
+a = c * -5
+d = 5
+a = d
+d = a

@@ -67,13 +67,13 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 41 "syntactic_analyzer.y"
+#line 46 "syntactic_analyzer.y"
 
 	struct {
 		int t_count;
 
 		char *name;
-		char *id;
+		char id[100];
 		char konst[100];
         } u;
 
