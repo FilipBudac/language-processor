@@ -1709,8 +1709,8 @@ void evaluate_variable(int id, char *text) {
         }
 
         if (!found) {
-            //printf("semantic error, variable '%s' hasn't been found \n", text);
-            yyerror("semantic error, variable hasn't been declared");
+            printf("semantic error, variable '%s' hasn't been found \n", text);
+            // yyerror("semantic error, variable hasn't been declared");
             exit(0);
         }
     }
@@ -1728,8 +1728,8 @@ void check_declaration(int id, char *text) {
                 int ret = strcmp(variables[i++], text);
 
                 if (ret == 0) {
-                    // printf("semantic error, variable '%s' already exists\n", text);
-                    yyerror("semantic error, redeclared variable");
+                    printf("semantic error, variable '%s' already exists\n", text);
+                    //yyerror("semantic error, redeclared variable ");
                     exit(0);
                 }
             }

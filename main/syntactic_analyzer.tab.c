@@ -465,8 +465,8 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    65,    65,    67,    68,    70,    72,    73,    75,    78,
-      81,   122,   124,   124,   128,   129,   131,   134,   137,   141,
-     143,   146,   164,   165,   166,   167,   168,   169
+      81,   122,   124,   124,   130,   131,   133,   136,   139,   143,
+     145,   148,   166,   167,   168,   169,   170,   171
 };
 #endif
 
@@ -1458,20 +1458,22 @@ yyreduce:
 #line 124 "syntactic_analyzer.y"
     {
 		 tmp = strdup(yytext);
+
+		 printf("ASSIGN \n");
   		;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 128 "syntactic_analyzer.y"
+#line 130 "syntactic_analyzer.y"
     {  ;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 131 "syntactic_analyzer.y"
+#line 133 "syntactic_analyzer.y"
     {
 	operator = strdup(yytext);
  ;}
@@ -1480,7 +1482,7 @@ yyreduce:
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 134 "syntactic_analyzer.y"
+#line 136 "syntactic_analyzer.y"
     {
 	operator = strdup(yytext);
  ;}
@@ -1489,7 +1491,7 @@ yyreduce:
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 137 "syntactic_analyzer.y"
+#line 139 "syntactic_analyzer.y"
     {
         operator = strdup(yytext);
  ;}
@@ -1498,7 +1500,7 @@ yyreduce:
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 143 "syntactic_analyzer.y"
+#line 145 "syntactic_analyzer.y"
     {
 	 right_v = strdup(yytext);
  ;}
@@ -1507,7 +1509,7 @@ yyreduce:
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 146 "syntactic_analyzer.y"
+#line 148 "syntactic_analyzer.y"
     {
 	if (operator == NULL) {
 		right_konst_s = strdup(yytext);
@@ -1529,7 +1531,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 1533 "syntactic_analyzer.tab.c"
+#line 1535 "syntactic_analyzer.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1741,7 +1743,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 172 "syntactic_analyzer.y"
+#line 174 "syntactic_analyzer.y"
 
 
 void yyerror (char const *s) {
