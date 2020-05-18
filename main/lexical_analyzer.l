@@ -17,6 +17,12 @@ int t_count = 0;
 
 char variables[1000][1000] = {{0}};
 
+
+struct Variable {
+	char *name;
+	char *value;
+};
+
 void check_declaration(int id, char *text);
 void evaluate_variable(int id, char *text);
 void yyerror (char const *s);
@@ -42,9 +48,12 @@ konst [-]*[0-9][0-9]*
      return (_VYPIS);
 }
 "opakuj" {
-     return (_OPAKUJ);
+    yylval.u.n_count += 2;
+
+    return (_OPAKUJ);
 }
 "jukapo" {
+     yylval.u.j_count += 1;
      return (_JUKAPO);
 }
 {id} {
@@ -57,7 +66,7 @@ konst [-]*[0-9][0-9]*
 }
 {konst} {
 
-     strcpy(yylval.u.konst, yytext);
+     yylval.u.name = strdup(yytext);
 
      if (atoi(yytext) < 0) {
         yylval.u.t_count += 2;
@@ -86,12 +95,12 @@ konst [-]*[0-9][0-9]*
 "=" {
     return (_ASSIGN);
 }
-"==" { return (_EQUAL); }
-"!=" { return (_NOT_EQUAL); }
-">" { return (_BIGGER_THAN); }
-"<" { return (_LESSER_THAN); }
-">=" { return (_BIGGER_EQUAL_THAN); }
-"<=" { return (_LESSER_EQUAL_THAN); }
+"==" { yylval.u.t_count++; return (_EQUAL); }
+"!=" { yylval.u.t_count++; return (_NOT_EQUAL); }
+">" { yylval.u.t_count++; return (_BIGGER_THAN); }
+"<" { yylval.u.t_count++; return (_LESSER_THAN); }
+">=" { yylval.u.t_count++; return (_BIGGER_EQUAL_THAN); }
+"<=" { yylval.u.t_count++; return (_LESSER_EQUAL_THAN); }
 [ \t] {}
 [ \n] { line_count++; }
 . { printf("lexical error, uknown %s \n", yytext); }

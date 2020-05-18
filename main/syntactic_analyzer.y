@@ -1,5 +1,5 @@
 %{
-// vyhodnotia sa najskor spodne listy a postupne sa potom zacnu prikazy smerom navrh [pre kazdy riadok
+// vyhodnotia sa najskor terminaly a postupne sa potom zacnu neterminaly smerom navrh
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,8 +14,13 @@ char *tmp;
 char *operator;
 char *right_v;
 
+char *comparator;
+char* v_left;
+char* v_right;
+
 char *right_konst_s;
 int current_count = 0;
+int n_current_count = 0;
 
 void yyerror (const char *s);
 
@@ -46,10 +51,22 @@ void yyerror (const char *s);
 %union {
 	struct {
 		int t_count;
+		int n_count;
+		int c_count;
+		int c_count_l;
+		int c_count_r;
+		int j_count;
 
+		char* v_left;
+		char* v_right;
+		char* v_condition;
+
+		char *test;
 		char *name;
 		char id[100];
 		char konst[100];
+
+		struct Variable *variables;
         } u;
 }
 
@@ -59,6 +76,10 @@ void yyerror (const char *s);
 %type <u> HODNOTA
 %type <u> VYRAZ
 %type <u> PRIRADENIE
+%type <u> PRIKAZ
+%type <u> PODMIENKA
+%type <u> KOMPARATOR
+
 
 %%
 
@@ -79,7 +100,10 @@ PRIKAZ: _NACITAJ _ID {
  	 printf("(READ, %s) \n", yytext);
  }
  | PRIRADENIE {
-	printf("(PRIRADENIE) \n");
+//	printf("(PRIRADENIE) \n");
+	if (atoi($1.name) == 1) {
+		$$.test = strdup($1.name);
+	}
 
 	if (operator == NULL && right_konst_s == NULL) {
 		printf("(:=, %s, sizeof(Integer), %s) \n", right_v, tmp);
@@ -117,15 +141,38 @@ PRIKAZ: _NACITAJ _ID {
 		tmp = NULL;
 	}
 
-	printf("------------------------------- \n");
+//	printf("------------------------------- \n");
  }
- | _OPAKUJ PODMIENKA PRIKAZY _JUKAPO
+ | _OPAKUJ {
+ 	n_current_count = $1.n_count;
+ 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
+ } PODMIENKA {
+	if (v_left != NULL) {
+		if (atoi(v_left) != 0) {
+			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 2);
+		}
+	}
+	if (v_right != NULL) {
+		if (atoi(v_right) != 0) {
+			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
+		}
+	}
+	printf("(%s, t%d, t%d, t%d) \n", comparator, current_count - 2, current_count - 1, current_count);
+	printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+	printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
+
+} PRIKAZY {
+
+ } _JUKAPO {
+ 	printf("(JUMP, n%d)\n", (n_current_count - 1) - ($7.j_count - 1) * 2);
+ 	printf("(NAVESTIE, n%d)\n", n_current_count - ($7.j_count - 1) * 2);
+ }
  ;
 PRIRADENIE: _ID {
 		 tmp = strdup(yytext);
   		} _ASSIGN VYRAZ
  ;
-VYRAZ: HODNOTA OPERATOR HODNOTA {  }
+VYRAZ: HODNOTA OPERATOR HODNOTA
  | HODNOTA
  ;
 OPERATOR: _PLUS {
@@ -138,35 +185,47 @@ OPERATOR: _PLUS {
         operator = strdup(yytext);
  }
  ;
- PODMIENKA: HODNOTA KOMPARATOR HODNOTA
+ PODMIENKA: HODNOTA {
+ 	if ($1.v_condition != NULL) {
+ 	 	v_left = strdup($1.v_condition);
+ 	}
+ } KOMPARATOR HODNOTA {
+ 	if ($4.v_condition != NULL) {
+		v_right = strdup($4.v_condition);
+	}
+ }
  ;
 HODNOTA: _ID {
 	 right_v = strdup(yytext);
+	 $$.v_condition = strdup(yytext);
  }
  | _KONST {
+ 	$$.v_condition = strdup(yytext);
+
+// 	printf("_KONST %s \n", yytext);
+
+	current_count = $1.t_count;
+
 	if (operator == NULL) {
 		right_konst_s = strdup(yytext);
-		current_count = $1.t_count;
 	}
 
 	if (operator != NULL && atoi(yytext) < 0) {
 		right_konst_s = strdup(yytext);
-		current_count = $1.t_count;
 	}
 
 	if (operator != NULL) {
 		right_konst_s = strdup(yytext);
-		current_count = $1.t_count;
 	}
  }
  ;
 
-KOMPARATOR: _LESSER_THAN
- | _BIGGER_THAN
- | _LESSER_EQUAL_THAN
- | _BIGGER_EQUAL_THAN
- | _EQUAL
- | _NOT_EQUAL
+KOMPARATOR: _LESSER_THAN { comparator = strdup(yytext); }
+ | _BIGGER_THAN { comparator = strdup(yytext); }
+ | _LESSER_EQUAL_THAN { comparator = strdup(yytext); }
+ | _BIGGER_EQUAL_THAN { comparator = strdup(yytext); }
+ | _EQUAL { comparator = strdup(yytext); }
+ | _NOT_EQUAL { comparator = strdup(yytext); }
  ;
 
 %%

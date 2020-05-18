@@ -1,0 +1,11 @@
+premenna a
+premenna b
+opakuj 1 < 5
+a = 2
+opakuj 1 < 6
+a = 3
+jukapo
+vypis a
+
+jukapo
+a = 9
