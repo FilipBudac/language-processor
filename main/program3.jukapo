@@ -1,11 +1,16 @@
 premenna a
 premenna b
-opakuj 1 < 5
+opakuj a <= 5
 a = 2
-opakuj 1 < 6
-a = 3
-jukapo
+opakuj a <= 5
+
+vypis a
+opakuj a <= b
+a = 2
 vypis a
 
+jukapo
+jukapo
+vypis a
 jukapo
 a = 9

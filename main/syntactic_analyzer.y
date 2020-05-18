@@ -147,19 +147,32 @@ PRIKAZ: _NACITAJ _ID {
  	n_current_count = $1.n_count;
  	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
  } PODMIENKA {
-	if (v_left != NULL) {
-		if (atoi(v_left) != 0) {
+	if (v_left != NULL && v_right != NULL) {
+		if (atoi(v_left) != 0 && atoi(v_right) != 0) {
 			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 2);
-		}
-	}
-	if (v_right != NULL) {
-		if (atoi(v_right) != 0) {
 			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
+
+			printf("(%s, t%d, t%d, t%d) \n", comparator, current_count - 2, current_count - 1, current_count);
+			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
+		} else if (atoi(v_left) == 0 && atoi(v_right) != 0) {
+			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
+
+			printf("(%s, %s, t%d, t%d) \n", comparator, v_left, current_count - 1, current_count);
+			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
+		} else if (atoi(v_left) != 0 && atoi(v_right) == 0) {
+			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 1);
+
+			printf("(%s, t%d, %s, t%d) \n", comparator, current_count - 1, v_right, current_count);
+			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
+		} else if (atoi(v_left) == 0 && atoi(v_right) == 0) {
+			printf("(%s, %s, %s, t%d) \n", comparator, v_left, v_right, current_count);
+			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		}
 	}
-	printf("(%s, t%d, t%d, t%d) \n", comparator, current_count - 2, current_count - 1, current_count);
-	printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
-	printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 
 } PRIKAZY {
 
@@ -201,9 +214,6 @@ HODNOTA: _ID {
  }
  | _KONST {
  	$$.v_condition = strdup(yytext);
-
-// 	printf("_KONST %s \n", yytext);
-
 	current_count = $1.t_count;
 
 	if (operator == NULL) {
