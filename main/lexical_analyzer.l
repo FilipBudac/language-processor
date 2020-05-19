@@ -15,13 +15,7 @@ int variable_count = 0;
 int var_active = 0;
 int t_count = 0;
 
-char variables[1000][1000] = {{0}};
-
-
-struct Variable {
-	char *name;
-	char *value;
-};
+char variables[1000][1000];
 
 void check_declaration(int id, char *text);
 void evaluate_variable(int id, char *text);
@@ -35,7 +29,6 @@ konst [-]*[0-9][0-9]*
 %%
 
 "premenna" {
-
     check_declaration(_PREMENNA, yytext);
     evaluate_variable(_PREMENNA, yytext);
 
@@ -57,17 +50,12 @@ konst [-]*[0-9][0-9]*
      return (_JUKAPO);
 }
 {id} {
-    strcpy(yylval.u.id, yytext);
-
     check_declaration(_ID, yytext);
     evaluate_variable(_ID, yytext);
 
     return (_ID);
 }
 {konst} {
-
-     yylval.u.name = strdup(yytext);
-
      if (atoi(yytext) < 0) {
         yylval.u.t_count += 2;
      } else {
@@ -121,7 +109,6 @@ void evaluate_variable(int id, char *text) {
 
         if (!found) {
             printf("semantic error, variable '%s' hasn't been found \n", text);
-            // yyerror("semantic error, variable hasn't been declared");
             exit(0);
         }
     }
@@ -140,7 +127,6 @@ void check_declaration(int id, char *text) {
 
                 if (ret == 0) {
                     printf("semantic error, variable '%s' already exists\n", text);
-                    //yyerror("semantic error, redeclared variable ");
                     exit(0);
                 }
             }

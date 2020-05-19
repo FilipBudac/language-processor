@@ -8,8 +8,6 @@
 extern int line_count;
 extern char *yytext;
 
-int yylex();
-
 char *tmp;
 char *operator;
 char *right_v;
@@ -17,12 +15,13 @@ char *right_v;
 char *comparator;
 char* v_left;
 char* v_right;
-
 char *right_konst_s;
+
 int current_count = 0;
 int n_current_count = 0;
 
 void yyerror (const char *s);
+int yylex();
 
 %}
 
@@ -60,13 +59,6 @@ void yyerror (const char *s);
 		char* v_left;
 		char* v_right;
 		char* v_condition;
-
-		char *test;
-		char *name;
-		char id[100];
-		char konst[100];
-
-		struct Variable *variables;
         } u;
 }
 
@@ -100,10 +92,6 @@ PRIKAZ: _NACITAJ _ID {
  	 printf("(READ, %s) \n", yytext);
  }
  | PRIRADENIE {
-//	printf("(PRIRADENIE) \n");
-	if (atoi($1.name) == 1) {
-		$$.test = strdup($1.name);
-	}
 
 	if (operator == NULL && right_konst_s == NULL) {
 		printf("(:=, %s, sizeof(Integer), %s) \n", right_v, tmp);
@@ -140,36 +128,39 @@ PRIKAZ: _NACITAJ _ID {
 		right_konst_s = NULL;
 		tmp = NULL;
 	}
-
-//	printf("------------------------------- \n");
  }
  | _OPAKUJ {
  	n_current_count = $1.n_count;
- 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
+// 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
  } PODMIENKA {
 	if (v_left != NULL && v_right != NULL) {
 		if (atoi(v_left) != 0 && atoi(v_right) != 0) {
 			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 2);
 			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
+ 			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, t%d, t%d, t%d) \n", comparator, current_count - 2, current_count - 1, current_count);
-			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) == 0 && atoi(v_right) != 0) {
 			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
+ 			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, %s, t%d, t%d) \n", comparator, v_left, current_count - 1, current_count);
-			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) != 0 && atoi(v_right) == 0) {
 			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 1);
+ 			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, t%d, %s, t%d) \n", comparator, current_count - 1, v_right, current_count);
-			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) == 0 && atoi(v_right) == 0) {
+		 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
+
 			printf("(%s, %s, %s, t%d) \n", comparator, v_left, v_right, current_count);
-			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
+//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		}
 	}
