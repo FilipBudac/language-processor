@@ -14,3 +14,10 @@ jukapo
 vypis a
 jukapo
 a = 9
+opakuj a <= b
+a = 2
+vypis a
+
+jukapo
+a = 90
+a = b

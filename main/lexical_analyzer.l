@@ -42,11 +42,19 @@ konst [-]*[0-9][0-9]*
 }
 "opakuj" {
     yylval.u.n_count += 2;
+    yylval.u.l1_count++;
 
     return (_OPAKUJ);
 }
 "jukapo" {
-     yylval.u.j_count += 1;
+    yylval.u.j_count += 1;
+    yylval.u.l2_count++;
+
+    if (yylval.u.l1_count == yylval.u.l2_count){
+        yylval.u.l1_count = 0;
+        yylval.u.l2_count = 0;
+    }
+
      return (_JUKAPO);
 }
 {id} {

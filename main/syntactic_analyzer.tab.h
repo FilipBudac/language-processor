@@ -67,7 +67,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 50 "syntactic_analyzer.y"
+#line 52 "syntactic_analyzer.y"
 
 	struct {
 		int t_count;
@@ -76,6 +76,8 @@ typedef union YYSTYPE
 		int c_count_l;
 		int c_count_r;
 		int j_count;
+		int l1_count;
+		int l2_count;
 
 		char* v_left;
 		char* v_right;
@@ -85,7 +87,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 89 "syntactic_analyzer.tab.h"
+#line 91 "syntactic_analyzer.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

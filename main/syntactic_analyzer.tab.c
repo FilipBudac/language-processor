@@ -90,6 +90,8 @@ char *right_konst_s;
 
 int current_count = 0;
 int n_current_count = 0;
+int j_current_count = 0;
+int decr = 0;
 
 void yyerror (const char *s);
 int yylex();
@@ -97,7 +99,7 @@ int yylex();
 
 
 /* Line 189 of yacc.c  */
-#line 101 "syntactic_analyzer.tab.c"
+#line 103 "syntactic_analyzer.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -152,7 +154,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 50 "syntactic_analyzer.y"
+#line 52 "syntactic_analyzer.y"
 
 	struct {
 		int t_count;
@@ -161,6 +163,8 @@ typedef union YYSTYPE
 		int c_count_l;
 		int c_count_r;
 		int j_count;
+		int l1_count;
+		int l2_count;
 
 		char* v_left;
 		char* v_right;
@@ -170,7 +174,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 174 "syntactic_analyzer.tab.c"
+#line 178 "syntactic_analyzer.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -182,7 +186,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 186 "syntactic_analyzer.tab.c"
+#line 190 "syntactic_analyzer.tab.c"
 
 #ifdef short
 # undef short
@@ -475,10 +479,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    78,    78,    80,    81,    83,    85,    86,    88,    91,
-      94,   132,   135,   168,   132,   175,   175,   179,   180,   182,
-     185,   188,   192,   192,   202,   206,   224,   225,   226,   227,
-     228,   229
+       0,    82,    82,    84,    85,    87,    89,    90,    92,    95,
+      98,   136,   138,   167,   136,   183,   183,   187,   188,   190,
+     193,   196,   200,   200,   210,   214,   232,   233,   234,   235,
+     236,   237
 };
 #endif
 
@@ -1404,7 +1408,7 @@ yyreduce:
         case 8:
 
 /* Line 1455 of yacc.c  */
-#line 88 "syntactic_analyzer.y"
+#line 92 "syntactic_analyzer.y"
     {
 	 printf("(WRITE, %s) \n", yytext);
  ;}
@@ -1413,7 +1417,7 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 91 "syntactic_analyzer.y"
+#line 95 "syntactic_analyzer.y"
     {
  	 printf("(READ, %s) \n", yytext);
  ;}
@@ -1422,7 +1426,7 @@ yyreduce:
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 94 "syntactic_analyzer.y"
+#line 98 "syntactic_analyzer.y"
     {
 
 	if (operator == NULL && right_konst_s == NULL) {
@@ -1466,17 +1470,16 @@ yyreduce:
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 132 "syntactic_analyzer.y"
+#line 136 "syntactic_analyzer.y"
     {
  	n_current_count = (yyvsp[(1) - (1)].u).n_count;
-// 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
  ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 135 "syntactic_analyzer.y"
+#line 138 "syntactic_analyzer.y"
     {
 	if (v_left != NULL && v_right != NULL) {
 		if (atoi(v_left) != 0 && atoi(v_right) != 0) {
@@ -1485,27 +1488,23 @@ yyreduce:
  			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, t%d, t%d, t%d) \n", comparator, current_count - 2, current_count - 1, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) == 0 && atoi(v_right) != 0) {
 			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
  			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, %s, t%d, t%d) \n", comparator, v_left, current_count - 1, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) != 0 && atoi(v_right) == 0) {
 			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 1);
  			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, t%d, %s, t%d) \n", comparator, current_count - 1, v_right, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) == 0 && atoi(v_right) == 0) {
 		 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, %s, %s, t%d) \n", comparator, v_left, v_right, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		}
 	}
@@ -1516,8 +1515,15 @@ yyreduce:
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 168 "syntactic_analyzer.y"
+#line 167 "syntactic_analyzer.y"
     {
+	if (decr > 1) {
+		printf("(JUMP, n%d)\n", (n_current_count - 1) - (j_current_count) * 2);
+		printf("(NAVESTIE, n%d)\n", n_current_count - (j_current_count) * 2);
+	} else {
+		printf("(JUMP, n%d)\n", n_current_count - 1);
+		printf("(NAVESTIE, n%d)\n", n_current_count);
+	}
 
  ;}
     break;
@@ -1525,17 +1531,19 @@ yyreduce:
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 170 "syntactic_analyzer.y"
+#line 176 "syntactic_analyzer.y"
     {
- 	printf("(JUMP, n%d)\n", (n_current_count - 1) - ((yyvsp[(7) - (7)].u).j_count - 1) * 2);
- 	printf("(NAVESTIE, n%d)\n", n_current_count - ((yyvsp[(7) - (7)].u).j_count - 1) * 2);
+ 	j_current_count = (yyvsp[(7) - (7)].u).j_count;
+ 	decr = (yyvsp[(7) - (7)].u).l1_count;
+ 	//printf("(JUMP, n%d)\n", (n_current_count - 1) - ($7.j_count - 1) * 2);
+ 	//printf("(NAVESTIE, n%d)\n", n_current_count - ($7.j_count - 1) * 2);
  ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 175 "syntactic_analyzer.y"
+#line 183 "syntactic_analyzer.y"
     {
 		 tmp = strdup(yytext);
   		;}
@@ -1544,7 +1552,7 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 182 "syntactic_analyzer.y"
+#line 190 "syntactic_analyzer.y"
     {
 	operator = strdup(yytext);
  ;}
@@ -1553,7 +1561,7 @@ yyreduce:
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 185 "syntactic_analyzer.y"
+#line 193 "syntactic_analyzer.y"
     {
 	operator = strdup(yytext);
  ;}
@@ -1562,7 +1570,7 @@ yyreduce:
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 188 "syntactic_analyzer.y"
+#line 196 "syntactic_analyzer.y"
     {
         operator = strdup(yytext);
  ;}
@@ -1571,7 +1579,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 192 "syntactic_analyzer.y"
+#line 200 "syntactic_analyzer.y"
     {
  	if ((yyvsp[(1) - (1)].u).v_condition != NULL) {
  	 	v_left = strdup((yyvsp[(1) - (1)].u).v_condition);
@@ -1582,7 +1590,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 196 "syntactic_analyzer.y"
+#line 204 "syntactic_analyzer.y"
     {
  	if ((yyvsp[(4) - (4)].u).v_condition != NULL) {
 		v_right = strdup((yyvsp[(4) - (4)].u).v_condition);
@@ -1593,7 +1601,7 @@ yyreduce:
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 202 "syntactic_analyzer.y"
+#line 210 "syntactic_analyzer.y"
     {
 	 right_v = strdup(yytext);
 	 (yyval.u).v_condition = strdup(yytext);
@@ -1603,7 +1611,7 @@ yyreduce:
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 206 "syntactic_analyzer.y"
+#line 214 "syntactic_analyzer.y"
     {
  	(yyval.u).v_condition = strdup(yytext);
 	current_count = (yyvsp[(1) - (1)].u).t_count;
@@ -1625,49 +1633,49 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 224 "syntactic_analyzer.y"
+#line 232 "syntactic_analyzer.y"
     { comparator = strdup(yytext); ;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 225 "syntactic_analyzer.y"
+#line 233 "syntactic_analyzer.y"
     { comparator = strdup(yytext); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 226 "syntactic_analyzer.y"
+#line 234 "syntactic_analyzer.y"
     { comparator = strdup(yytext); ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 227 "syntactic_analyzer.y"
+#line 235 "syntactic_analyzer.y"
     { comparator = strdup(yytext); ;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 228 "syntactic_analyzer.y"
+#line 236 "syntactic_analyzer.y"
     { comparator = strdup(yytext); ;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 229 "syntactic_analyzer.y"
+#line 237 "syntactic_analyzer.y"
     { comparator = strdup(yytext); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1671 "syntactic_analyzer.tab.c"
+#line 1679 "syntactic_analyzer.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1879,7 +1887,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 232 "syntactic_analyzer.y"
+#line 240 "syntactic_analyzer.y"
 
 
 void yyerror (char const *s) {

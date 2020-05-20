@@ -19,6 +19,8 @@ char *right_konst_s;
 
 int current_count = 0;
 int n_current_count = 0;
+int j_current_count = 0;
+int decr = 0;
 
 void yyerror (const char *s);
 int yylex();
@@ -55,6 +57,8 @@ int yylex();
 		int c_count_l;
 		int c_count_r;
 		int j_count;
+		int l1_count;
+		int l2_count;
 
 		char* v_left;
 		char* v_right;
@@ -131,7 +135,6 @@ PRIKAZ: _NACITAJ _ID {
  }
  | _OPAKUJ {
  	n_current_count = $1.n_count;
-// 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
  } PODMIENKA {
 	if (v_left != NULL && v_right != NULL) {
 		if (atoi(v_left) != 0 && atoi(v_right) != 0) {
@@ -140,36 +143,41 @@ PRIKAZ: _NACITAJ _ID {
  			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, t%d, t%d, t%d) \n", comparator, current_count - 2, current_count - 1, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) == 0 && atoi(v_right) != 0) {
 			printf("(INTEGER, %s, t%d) \n", v_right, current_count - 1);
  			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, %s, t%d, t%d) \n", comparator, v_left, current_count - 1, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) != 0 && atoi(v_right) == 0) {
 			printf("(INTEGER, %s, t%d) \n", v_left, current_count - 1);
  			printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, t%d, %s, t%d) \n", comparator, current_count - 1, v_right, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		} else if (atoi(v_left) == 0 && atoi(v_right) == 0) {
 		 	printf("(NAVESTIE, n%d) \n", n_current_count - 1);
 
 			printf("(%s, %s, %s, t%d) \n", comparator, v_left, v_right, current_count);
-//			printf("(JUMPT, t%d, n%d) \n", current_count, n_current_count - 1);
 			printf("(JUMPF, t%d, n%d) \n", current_count, n_current_count);
 		}
 	}
 
 } PRIKAZY {
+	if (decr > 1) {
+		printf("(JUMP, n%d)\n", (n_current_count - 1) - (j_current_count) * 2);
+		printf("(NAVESTIE, n%d)\n", n_current_count - (j_current_count) * 2);
+	} else {
+		printf("(JUMP, n%d)\n", n_current_count - 1);
+		printf("(NAVESTIE, n%d)\n", n_current_count);
+	}
 
  } _JUKAPO {
- 	printf("(JUMP, n%d)\n", (n_current_count - 1) - ($7.j_count - 1) * 2);
- 	printf("(NAVESTIE, n%d)\n", n_current_count - ($7.j_count - 1) * 2);
+ 	j_current_count = $7.j_count;
+ 	decr = $7.l1_count;
+ 	//printf("(JUMP, n%d)\n", (n_current_count - 1) - ($7.j_count - 1) * 2);
+ 	//printf("(NAVESTIE, n%d)\n", n_current_count - ($7.j_count - 1) * 2);
  }
  ;
 PRIRADENIE: _ID {
